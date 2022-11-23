@@ -1,0 +1,15 @@
+FROM python:3
+
+RUN apt update && apt -y install libpq-dev python-dev
+
+WORKDIR /app
+
+ADD ./config /app/config/
+ADD ./gunicorn /app/gunicorn/
+ADD ./manage.py /app/ 
+ADD ./requirements.txt /app/
+
+RUN pip install -r requirements.txt
+
+
+CMD ["gunicorn", "config.wsgi", "-c", "gunicorn/prod.py"]
