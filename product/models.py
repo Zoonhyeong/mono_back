@@ -41,6 +41,7 @@ class Sub_group(models.Model):
     def __repr__(self):
         return f"{self.group_name}"
 
+
 #구독정보 
 class Subscribe(models.Model):
     #아이콘 하나 만들기
