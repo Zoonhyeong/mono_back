@@ -31,7 +31,7 @@ class Member(AbstractUser):
         return f"{self.id}: {self.nickname}"
 
 #구독 그룹
-class Sub_group(models.Model):
+class SubGroup(models.Model):
 
     #그룹 이름
     group_name = models.CharField(max_length=32, blank=True, null=True)
@@ -49,7 +49,7 @@ class Subscribe(models.Model):
     #구독 외래키 - 유저를 참조 , 유저가 삭제되면 같이 삭제
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=True)
     #구독 그룹 외래키 - 구독 그룹을 참조, 그룹이 삭제되도 구독정보는 삭제X
-    group = models.ForeignKey(Sub_group, on_delete=models.SET_NULL, null=True)
+    group = models.ForeignKey(SubGroup, on_delete=models.SET_NULL, null=True)
 
     name = models.CharField(max_length=32)
     memo = models.TextField(blank=True, max_length=254)
@@ -67,7 +67,7 @@ class Subscribe(models.Model):
         return f"{self.member}가 구독한 것 > {self.name}: {self.memo}"
 
 #구독 탈퇴 정보
-class Sub_cancellation(models.Model):
+class SubCancellation(models.Model):
     #텍스트
     text = models.TextField(blank=True, max_length=254)
     #스크린 샷(주소)
@@ -81,12 +81,12 @@ class Sub_cancellation(models.Model):
         return f"{self.id}: {self.text}"
 
 #구독 템플릿
-class Sub_template(models.Model):
+class SubTemplate(models.Model):
     #템플릿 이름
     temp_name = models.CharField(max_length=32, blank=True, null=True)
     #결제 금액
     purchase_price = models.BigIntegerField(default=0)
     #탈퇴 정보 외래키
-    sub_cancel = models.ForeignKey(Sub_cancellation, on_delete=models.SET_NULL, null=True)
+    sub_cancel = models.ForeignKey(SubCancellation, on_delete=models.SET_NULL, null=True)
     def __repr__(self):
         return f"{self.temp_name}"

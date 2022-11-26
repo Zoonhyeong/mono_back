@@ -27,3 +27,4 @@ sqlparse==0.4.3
 urllib3==1.26.12
 python-dateutil==2.8.2
 django-cors-headers
+django-colorfeild==0.7.2
