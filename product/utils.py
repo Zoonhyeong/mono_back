@@ -1,9 +1,9 @@
 def process_filter(request, queryset, **kwargs):
     """
     process_filter(request, queryset,
-                   target1=(id, type, default),
-                   target2=(id, type, default),
-                   target3=(id, type, default),)
+                target1=(id, type, default),
+                target2=(id, type, default),
+                target3=(id, type, default),)
     """
 
     for target, (id, type_, default) in kwargs.items():

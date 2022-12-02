@@ -76,10 +76,10 @@ class MemberListAPI(generics.GenericAPIView):
         """
         API형식
         GET /members?
-                     query=<table id>&           기준 정렬은 없는 것이 기본
-                     asc=<int:0, 1::default=0>&  내림차순이 기본
-                     offset=<int::default=0>&    0번 부터 불러오는 것이 기본
-                     limit=<int::default = 10>   최대 10까지 불러오는 것이 기본
+                    query=<table id>&           기준 정렬은 없는 것이 기본
+                    asc=<int:0, 1::default=0>&  내림차순이 기본
+                    offset=<int::default=0>&    0번 부터 불러오는 것이 기본
+                    limit=<int::default = 10>   최대 10까지 불러오는 것이 기본
         """
         queryset = Member.objects.all()
         queryset = process_filter(request, queryset, 
@@ -147,10 +147,10 @@ class SubscribeListAPI(generics.GenericAPIView):
         """
         API형식
         GET /members?
-                     query=<table id>&           기준 정렬은 없는 것이 기본
-                     asc=<int:0, 1::default=0>&  내림차순이 기본
-                     offset=<int::default=0>&    0번 부터 불러오는 것이 기본
-                     limit=<int::default = 10>   최대 10까지 불러오는 것이 기본
+                    query=<table id>&           기준 정렬은 없는 것이 기본
+                    asc=<int:0, 1::default=0>&  내림차순이 기본
+                    offset=<int::default=0>&    0번 부터 불러오는 것이 기본
+                    limit=<int::default = 10>   최대 10까지 불러오는 것이 기본
         """
 
         #정렬관련 쿼리 
