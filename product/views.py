@@ -225,3 +225,35 @@ class SubscribeListAPI(generics.GenericAPIView):
     def delete(self, request, username):
         #없는 메소드
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+#구독 리스트와 그룹정보를 전부를 불러오는  API
+class SubscribeListAndGroupAPI(generics.GenericAPIView):
+    serializer_class = SubscribeSerializer
+
+    def get(self, request, username):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def post(self, request, username):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def put(self, request, username): 
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def delete(self, request, username):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+#구독 취소 API
+class SubscribeCancelAPI(generics.GenericAPIView):
+    serializer_class = SubscribeSerializer
+
+    def get(self, request, username):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def post(self, request, username):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def put(self, request, username): 
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def delete(self, request, username):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
