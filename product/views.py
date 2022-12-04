@@ -232,7 +232,7 @@ class SubscribeListAndGroupAPI(generics.GenericAPIView):
         result = list(queryset_subscribe) + groups
         return Response(result, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-#구독 리스트를 위한 API
+#구독 취소 리스트 API
 @permission_classes([AllowAny])
 class SubscribeCancelAPI(generics.GenericAPIView):
     serializer_class = SubscribeSerializer
