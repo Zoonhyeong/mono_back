@@ -1,3 +1,4 @@
+from curses import color_pair
 from colorfield.fields import ColorField
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractUser
@@ -36,7 +37,11 @@ class SubGroup(models.Model):
     #그룹 이름
     group_name = models.CharField(max_length=32, blank=True, null=True)
     #그룹 색
-    color = ColorField(default='#FFFFFF')
+    COLOR_PALETTE = [
+        ("#FFFFFF", "white", ),
+        ("#000000", "black", ),
+    ]
+    color = ColorField(choices=COLOR_PALETTE)
 
     def __repr__(self):
         return f"{self.group_name}"
@@ -46,9 +51,9 @@ class SubGroup(models.Model):
 class Subscribe(models.Model):
     #아이콘 하나 만들기
     icon = models.ImageField(blank=True, null=True)
-    #구독 외래키 - 유저를 참조 , 유저가 삭제되면 같이 삭제
+    #외래키 - 유저를 참조 , 유저가 삭제되면 같이 삭제
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=True)
-    #구독 그룹 외래키 - 구독 그룹을 참조, 그룹이 삭제되도 구독정보는 삭제X
+    #외래키 - 구독 그룹을 참조, 그룹이 삭제되도 구독정보는 삭제X
     group = models.ForeignKey(SubGroup, on_delete=models.SET_NULL, null=True)
 
     name = models.CharField(max_length=32)

@@ -12,7 +12,7 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from .serializers import MemberRegisterSerializer, MemberLoginSerializer, MemberSerializer, SubscribeSerializer
+from .serializers import MemberRegisterSerializer, MemberLoginSerializer, MemberSerializer, SubscribeSerializer, SubGroupSerializer
 from .models import Member, Subscribe, SubGroup, SubCancellation, SubTemplate
 from .utils import process_filter, process_sorted
 
@@ -206,8 +206,89 @@ class SubscribeListAPI(generics.GenericAPIView):
 
         return Response(serializer.data, status=201)
 
+#sid값 구독정보를 위한 API
+@permission_classes([AllowAny])
+class SubscribeSidAPI(generics.GenericAPIView):
+    serializer_class = SubscribeSerializer
+    queryset = ""
 
-#구독 리스트를 위한 API
+    def get(self, request, username, sid):
+        #모든 구독 정보를 불러오고 id값에 맞는 구독 정보를 넘겨준다
+        queryset = Subscribe.objects.get(id=sid)
+        serializer = SubscribeSerializer(queryset)
+        return Response(serializer.data, status=200)
+
+    def put(self, request, username, sid): 
+        #변경점 업데이트
+        Subscribe.objects.filter(id=sid).update(**request.data)
+
+        return Response(status=200)
+
+    def delete(self, request, username, sid):
+        #삭제
+        Subscribe.objects.filter(id=sid).delete()
+        return Response(status=200)
+
+#그룹 리스트를 위한 API
+@permission_classes([AllowAny])
+class SubscribeGroupListAPI(generics.GenericAPIView):
+    serializer_class = SubGroupSerializer
+    queryset = ""
+
+    def get(self, request, username):
+        #그룹 리스트를 불러온다.
+        queryset = SubGroup.objects.all()
+
+        serializer = SubGroupSerializer(queryset, many=True)
+
+        return Response(serializer.data, status=200)
+
+    def post(self, request, username):
+        #해당하는 유저를 찾는다.
+        member = Member.objects.get(username=username)
+        member = MemberSerializer(member).data
+
+        data = {k: v for k, v in request.data.items()}
+
+        data["group_name"] = request.data.get("group_name", None)
+        data["color"] = request.data.get("color")
+        
+        serializer = SubGroupSerializer(data=data)
+        serializer.group_name = request.data.get("group_name", None)
+        serializer.color = request.data.get("color")
+
+        if(not serializer.is_valid()):
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data, status=201)
+
+#sid값 구독그룹를 위한 API
+@permission_classes([AllowAny])
+class SubGroupSidAPI(generics.GenericAPIView):
+    serializer_class = SubGroupSerializer
+    queryset = ""
+
+    def get(self, request, username, sid):
+        #모든 그룹 정보를 불러오고 id값에 맞는 그룹 정보를 넘겨준다
+        queryset = SubGroup.objects.get(id=sid)
+        serializer = SubGroupSerializer(queryset)
+        return Response(serializer.data, status=200)
+
+    def put(self, request, username, sid): 
+        #변경점 업데이트
+        SubGroup.objects.filter(id=sid).update(**request.data)
+
+        return Response(status=200)
+
+    def delete(self, request, username, sid):
+        #삭제
+        SubGroup.objects.filter(id=sid).delete()
+        return Response(status=200)
+
+
+#구독, 그룹 리스트를 위한 API
 @permission_classes([AllowAny])
 class SubscribeListAndGroupAPI(generics.GenericAPIView):
     serializer_class = SubscribeSerializer
