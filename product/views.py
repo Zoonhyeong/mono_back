@@ -105,14 +105,6 @@ class MemberListAPI(generics.GenericAPIView):
         serializer.save()
         return Response(serializer.data, status=201)
 
-    def put(self, request):
-        #없는 메소드
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def delete(self, request):
-        #없는 메소드
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 #단일 멤버를 위한 API
 class MemberAPI(generics.GenericAPIView):
     serializer_class = MemberSerializer
@@ -121,10 +113,6 @@ class MemberAPI(generics.GenericAPIView):
         queryset = Member.objects.get(username=username)
         serializer = MemberSerializer(queryset)
         return Response(serializer.data, status=200)
-
-    def post(self, request, username):
-        #없는 메소드
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def put(self, request, username): 
         #예외처리하기 key값이 없는거라던가
@@ -218,13 +206,6 @@ class SubscribeListAPI(generics.GenericAPIView):
 
         return Response(serializer.data, status=201)
 
-    def put(self, request, username):
-        #없는 메소드
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def delete(self, request, username):
-        #없는 메소드
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 #구독 리스트를 위한 API
 @permission_classes([AllowAny])
@@ -234,28 +215,10 @@ class SubscribeListAndGroupAPI(generics.GenericAPIView):
     def get(self, request, username):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def post(self, request, username):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def put(self, request, username): 
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def delete(self, request, username):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 #구독 리스트를 위한 API
 @permission_classes([AllowAny])
 class SubscribeCancelAPI(generics.GenericAPIView):
     serializer_class = SubscribeSerializer
 
     def get(self, request, username):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def post(self, request, username):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def put(self, request, username): 
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def delete(self, request, username):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
