@@ -230,7 +230,7 @@ class SubscribeListAndGroupAPI(generics.GenericAPIView):
 
         
         result = list(queryset_subscribe) + groups
-        return Response(result, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(result, status=200)
 
 #구독 취소 리스트 API
 @permission_classes([AllowAny])
