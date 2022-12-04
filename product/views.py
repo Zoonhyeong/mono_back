@@ -222,14 +222,16 @@ class SubscribeListAndGroupAPI(generics.GenericAPIView):
         queryset_subscribe = Subscribe.objects.all()
         queryset_subscribe = queryset_subscribe.filter(member_id=member.get("id", None))
 
+        sublist = SubscribeSerializer(queryset_subscribe, many=True).data
+
         #SubGroup 쿼리셋
         queryset_sub_group = SubGroup.objects.all()
         groups = [
-            queryset_sub_group.filter(data.get("group", None)) for data in queryset_subscribe
+            queryset_sub_group.filter(data["group"]) for data in sublist if data.get("group", None)
         ]
 
         
-        result = list(queryset_subscribe) + groups
+        result = sublist + groups
         return Response(result, status=200)
 
 #구독 취소 리스트 API
