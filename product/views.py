@@ -206,6 +206,7 @@ class SubscribeListAPI(generics.GenericAPIView):
 
         return Response(serializer.data, status=201)
 
+
 #sid값 구독정보를 위한 API
 @permission_classes([AllowAny])
 class SubscribeSidAPI(generics.GenericAPIView):
