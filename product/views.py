@@ -13,7 +13,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .serializers import MemberRegisterSerializer, MemberLoginSerializer, MemberSerializer, SubscribeSerializer
-from .models import Member, Subscribe
+from .models import Member, Subscribe, SubGroup, SubCancellation, SubTemplate
 from .utils import process_filter, process_sorted
 
 # Create your views here.
@@ -211,9 +211,26 @@ class SubscribeListAPI(generics.GenericAPIView):
 @permission_classes([AllowAny])
 class SubscribeListAndGroupAPI(generics.GenericAPIView):
     serializer_class = SubscribeSerializer
+    queryset = ""
 
     def get(self, request, username):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        #요청한 유저를 찾는다.
+        member = Member.objects.get(username=username)
+        member = MemberSerializer(member).data
+        
+        #subscribe 쿼리셋
+        queryset_subscribe = Subscribe.objects.all()
+        queryset_subscribe = queryset_subscribe.filter(member_id=member.get("id", None))
+
+        #SubGroup 쿼리셋
+        queryset_sub_group = SubGroup.objects.all()
+        groups = [
+            queryset_sub_group.filter(data.get("group", None)) for data in queryset_subscribe
+        ]
+
+        
+        result = list(queryset_subscribe) + groups
+        return Response(result, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 #구독 리스트를 위한 API
 @permission_classes([AllowAny])
