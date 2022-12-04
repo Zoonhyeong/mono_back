@@ -236,6 +236,14 @@ class SubscribeListAndGroupAPI(generics.GenericAPIView):
 @permission_classes([AllowAny])
 class SubscribeCancelAPI(generics.GenericAPIView):
     serializer_class = SubscribeSerializer
+    queryset = ""
+    def get(self, request, username, sid):
 
-    def get(self, request, username):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        result = []
+
+        queryset = SubCancellation.objects.all()
+        queryset = queryset.filter(subscribe=sid)
+
+        result = list(queryset)
+
+        return Response(result, status=200)
