@@ -40,7 +40,7 @@ class SubGroup(models.Model):
         ("#FFFFFF", "white", ),
         ("#000000", "black", ),
     ]
-    color = ColorField(choices=COLOR_PALETTE)
+    color = ColorField(default="#FFFFFF")
 
     def __repr__(self):
         return f"{self.group_name}"

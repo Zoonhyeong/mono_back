@@ -42,3 +42,7 @@ python manage.py migrate
 git config --global core.eol lf
 git config --global core.autocrlf input
 ```
+
+## 갑자기 접속이 안될경우
+
+- docker에서 mysql을 먼저 실행한 후 django를 실행해볼 것

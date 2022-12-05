@@ -106,6 +106,7 @@ class MemberListAPI(generics.GenericAPIView):
         return Response(serializer.data, status=201)
 
 #단일 멤버를 위한 API
+@permission_classes([AllowAny])
 class MemberAPI(generics.GenericAPIView):
     serializer_class = MemberSerializer
     queryset = ""
@@ -221,7 +222,8 @@ class SubscribeSidAPI(generics.GenericAPIView):
 
     def put(self, request, username, sid): 
         #변경점 업데이트
-        Subscribe.objects.filter(id=sid).update(**request.data)
+        serializer = SubscribeSerializer(request.data)
+        Subscribe.objects.filter(id=sid).update(serializer.data)
 
         return Response(status=200)
 
@@ -249,20 +251,12 @@ class SubscribeGroupListAPI(generics.GenericAPIView):
         member = Member.objects.get(username=username)
         member = MemberSerializer(member).data
 
-        data = {k: v for k, v in request.data.items()}
+        serializer = SubGroupSerializer(data=request.data)
 
-        data["group_name"] = request.data.get("group_name", None)
-        data["color"] = request.data.get("color")
-        
-        serializer = SubGroupSerializer(data=data)
-        serializer.group_name = request.data.get("group_name", None)
-        serializer.color = request.data.get("color")
-
+        #유효성 확인
         if(not serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
         serializer.save()
-
         return Response(serializer.data, status=201)
 
 #sid값 구독그룹를 위한 API
@@ -277,7 +271,7 @@ class SubGroupSidAPI(generics.GenericAPIView):
         serializer = SubGroupSerializer(queryset)
         return Response(serializer.data, status=200)
 
-    def put(self, request, username, sid): 
+    def put(self, request, username, sid):
         #변경점 업데이트
         SubGroup.objects.filter(id=sid).update(**request.data)
 
