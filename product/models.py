@@ -33,7 +33,6 @@ class Member(AbstractUser):
 
 #구독 그룹
 class SubGroup(models.Model):
-
     #그룹 이름
     group_name = models.CharField(max_length=32, blank=True, null=True)
     #그룹 색

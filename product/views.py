@@ -108,7 +108,7 @@ class MemberListAPI(generics.GenericAPIView):
 #단일 멤버를 위한 API
 class MemberAPI(generics.GenericAPIView):
     serializer_class = MemberSerializer
-
+    queryset = ""
     def get(self, request, username):
         queryset = Member.objects.get(username=username)
         serializer = MemberSerializer(queryset)
