@@ -310,11 +310,20 @@ class SubscribeListAndGroupAPI(generics.GenericAPIView):
 
         #SubGroup 쿼리셋
         queryset_sub_group = SubGroup.objects.all()
-        groups = [
-            queryset_sub_group.filter(data["group"]) for data in sublist if data.get("group", None)
-        ]
 
-        
+        groups = []
+
+        for data in sublist:
+            if data.get("group", None) == None:
+                continue
+
+            group_id = data["group"]
+            group_queryset = queryset_sub_group.get(id=group_id)
+            group_serializer = SubGroupSerializer(group_queryset).data
+
+            if group_serializer not in groups:
+                groups.append(group_serializer)
+
         result = sublist + groups
         return Response(result, status=200)
 
