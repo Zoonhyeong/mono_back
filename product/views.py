@@ -117,8 +117,16 @@ class MemberAPI(generics.GenericAPIView):
 
     def put(self, request, username): 
         #예외처리하기 key값이 없는거라던가
+        original_query = Member.objects.get(username=username)
+        original_object = MemberSerializer(original_query).data
+        
+        update_object = {k: v and v or original_object.get(k, '') for k, v in request.data.items()}
 
-        serializer = MemberSerializer(request.data)
+        print(original_object)
+        print(update_object)
+
+        serializer = MemberSerializer(update_object)
+
         Member.objects.filter(username=username).update(**serializer.data)
         return Response(status=200)
 
