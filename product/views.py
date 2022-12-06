@@ -229,9 +229,13 @@ class SubscribeSidAPI(generics.GenericAPIView):
         return Response(serializer.data, status=200)
 
     def put(self, request, username, sid): 
-        #변경점 업데이트
-        serializer = SubscribeSerializer(request.data)
-        Subscribe.objects.filter(id=sid).update(serializer.data)
+
+        original_query = Subscribe.objects.get(id=sid)
+        original_object = SubscribeSerializer(original_query).data
+        
+        update_object = {k: v and v or original_object.get(k, '') for k, v in request.data.items()}
+
+        Subscribe.objects.filter(id=sid).update(**update_object)
 
         return Response(status=200)
 
@@ -281,7 +285,12 @@ class SubGroupSidAPI(generics.GenericAPIView):
 
     def put(self, request, username, sid):
         #변경점 업데이트
-        SubGroup.objects.filter(id=sid).update(**request.data)
+        original_query = SubGroup.objects.get(id=sid)
+        original_object = SubGroupSerializer(original_query).data
+        
+        update_object = {k: v and v or original_object.get(k, '') for k, v in request.data.items()}
+        
+        SubGroup.objects.filter(id=sid).update(**update_object)
 
         return Response(status=200)
 
