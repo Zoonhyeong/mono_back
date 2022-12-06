@@ -122,9 +122,6 @@ class MemberAPI(generics.GenericAPIView):
         
         update_object = {k: v and v or original_object.get(k, '') for k, v in request.data.items()}
 
-        print(original_object)
-        print(update_object)
-
         serializer = MemberSerializer(update_object)
 
         Member.objects.filter(username=username).update(**serializer.data)
