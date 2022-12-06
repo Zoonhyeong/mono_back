@@ -194,11 +194,13 @@ class SubscribeListAPI(generics.GenericAPIView):
 
         #왜 이렇게 이중으로 바꿔야 하는지 이해를 못함
         data = {k: v for k, v in request.data.items()}
-
+        print(member)
         data["icon"] = None
         data["member"] = member.get("id", None)
         data["next_purchase_date"] = next_purchase_date.date().strftime('%Y-%m-%d')
         data["sum_price"] =0
+
+        print(data)
         
         serializer = SubscribeSerializer(data=data)
         serializer.member = member.get("id", None)

@@ -61,7 +61,7 @@ class MemberLoginSerializer(serializers.Serializer):
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ('password', 'email', 'nickname', 'profile', 'phone', 'profile_image')
+        fields = ('id', 'password', 'email', 'nickname', 'profile', 'phone', 'profile_image')
 
 
 class SubscribeSerializer(serializers.ModelSerializer):
