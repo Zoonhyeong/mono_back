@@ -33,6 +33,8 @@ class Member(AbstractUser):
 
 #구독 그룹
 class SubGroup(models.Model):
+    #멤버 외래키
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, null=True)
     #그룹 이름
     group_name = models.CharField(max_length=32, blank=True, null=True)
     #그룹 색

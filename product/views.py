@@ -246,14 +246,17 @@ class SubscribeSidAPI(generics.GenericAPIView):
 
 #그룹 리스트를 위한 API
 @permission_classes([AllowAny])
-class SubscribeGroupListAPI(generics.GenericAPIView):
+class SubGroupListAPI(generics.GenericAPIView):
     serializer_class = SubGroupSerializer
     queryset = ""
 
     def get(self, request, username):
+        #해당하는 유저를 찾는다.
+        member = Member.objects.get(username=username)
+        member = MemberSerializer(member).data
+        
         #그룹 리스트를 불러온다.
-        queryset = SubGroup.objects.all()
-
+        queryset = SubGroup.objects.filter(member=member.get("id", None))
         serializer = SubGroupSerializer(queryset, many=True)
 
         return Response(serializer.data, status=200)
