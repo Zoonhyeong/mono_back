@@ -172,17 +172,22 @@ class SubscribeListAPI(generics.GenericAPIView):
             limit=10,
         )
 
+        # 날짜간의 개월 수 차이를 구하는 함수
         def diff_month(d1, d2):
             return (d1.year - d2.year) * 12 + d1.month - d2.month
         
         diff = 0
-
+        # get 호출때마다 누적금액 연산
         for s in queryset:
+            # 시작일부터 개월 수
             diff = diff_month(datetime.today(), s.start_date)
+            # 시작일이 결제일은 지난경우 개월 수 -1
             if s.start_date.day > s.next_purchase_date.day:
                 diff += -1
+            # 오늘이 결제일을 지난 경우 개월 수 +1
             if (datetime.today().day - s.next_purchase_date.day) > 0:
                 diff += 1
+            # 누적금액 += 시작일로부터 지난 개월 수 * 결제금액
             s.sum_price += (diff * s.purchase_price)
 
         serializer = SubscribeSerializer(queryset, many=True)
