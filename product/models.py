@@ -59,14 +59,18 @@ class Subscribe(models.Model):
 
     name = models.CharField(max_length=32)
     memo = models.TextField(blank=True, max_length=254)
-
+    #정보 등록일
     start_date = models.DateField(default=datetime.now)
+    #다음 결제일
     next_purchase_date = models.DateField()
+    #결제 주기 월
     purchase_month = models.PositiveSmallIntegerField() # 0 to 32767
+    #결제 일자
     purchase_date = models.PositiveSmallIntegerField()  # 0 to 32767
 
-
+    #결제금액
     purchase_price = models.BigIntegerField(default=0)
+    #누적금액
     sum_price = models.BigIntegerField(default=0)
 
     def __repr__(self):

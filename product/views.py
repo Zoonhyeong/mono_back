@@ -172,6 +172,19 @@ class SubscribeListAPI(generics.GenericAPIView):
             limit=10,
         )
 
+        def diff_month(d1, d2):
+            return (d1.year - d2.year) * 12 + d1.month - d2.month
+        
+        diff = 0
+
+        for s in queryset:
+            diff = diff_month(datetime.today(), s.start_date)
+            if s.start_date.day > s.next_purchase_date.day:
+                diff += -1
+            if (datetime.today().day - s.next_purchase_date.day) > 0:
+                diff += 1
+            s.sum_price += (diff * s.purchase_price)
+
         serializer = SubscribeSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
