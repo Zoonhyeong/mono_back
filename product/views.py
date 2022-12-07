@@ -354,3 +354,18 @@ class SubscribeCancelAPI(generics.GenericAPIView):
         result = list(queryset)
 
         return Response(result, status=200)
+
+#구독 취소 리스트 API
+@permission_classes([AllowAny])
+class SummaryAPI(generics.GenericAPIView):
+    serializer_class = None
+    queryset = ""
+    def get(self, request, username):
+
+        member_queryset = Member.objects.get(username=username)
+        member = MemberSerializer(member_queryset).data
+
+        from django.db.models import Sum
+        result = Subscribe.objects.filter(member_id=member.get('id', None)).aggregate(Sum('purchase_price'))
+
+        return Response(result, status=200)
