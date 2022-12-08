@@ -14,7 +14,7 @@ from dateutil.relativedelta import relativedelta
 
 from .serializers import MemberRegisterSerializer, MemberLoginSerializer, MemberSerializer, SubscribeSerializer, SubGroupSerializer
 from .models import Member, Subscribe, SubGroup, SubCancellation, SubTemplate
-from .utils import process_filter, process_sorted
+from .utils import process_filter, process_sorted, diff_month
 
 # Create your views here.
 
@@ -172,25 +172,23 @@ class SubscribeListAPI(generics.GenericAPIView):
             limit=10,
         )
 
-        # 날짜간의 개월 수 차이를 구하는 함수
-        def diff_month(d1, d2):
-            return (d1.year - d2.year) * 12 + d1.month - d2.month
+
         
         diff = 0
         # get 호출때마다 누적금액 연산
         for s in queryset:
             # 시작일부터 개월 수
-            diff = diff_month(datetime.today(), s.start_date)
-            # 시작일이 결제일은 지난경우 개월 수 -1
-            if s.start_date.day > s.next_purchase_date.day:
-                diff += -1
-            # 오늘이 결제일을 지난 경우 개월 수 +1
-            if (datetime.today().day - s.next_purchase_date.day) > 0:
+            diff = diff_month(datetime.today(), s.next_purchase_date)
+            
+            if datetime.today().day - s.next_purchase_date.day >= 0:
                 diff += 1
-            # 누적금액 += 시작일로부터 지난 개월 수 * 결제금액
-            s.sum_price += (diff * s.purchase_price)
+
+            diff = max(0, diff)
+
+            s.sum_price = (diff // s.purchase_month) * s.purchase_price
 
         serializer = SubscribeSerializer(queryset, many=True)
+        
         return Response(serializer.data, status=200)
 
     def post(self, request, username):
@@ -205,7 +203,7 @@ class SubscribeListAPI(generics.GenericAPIView):
         pday = int(request.data.get("purchase_date", 0))
 
         #이미 지난날이면
-        if now.day >= pday:
+        if now.day > pday:
             next_purchase_date = datetime.now() + relativedelta(months=pmonth)
 
         next_purchase_date = next_purchase_date.replace(day=pday)
@@ -243,6 +241,20 @@ class SubscribeSidAPI(generics.GenericAPIView):
     def get(self, request, username, sid):
         #모든 구독 정보를 불러오고 id값에 맞는 구독 정보를 넘겨준다
         queryset = Subscribe.objects.get(id=sid)
+
+        diff = 0
+        # get 호출때마다 누적금액 연산
+
+        # 시작일부터 개월 수
+        diff = diff_month(datetime.today(), queryset.next_purchase_date)
+        
+        if datetime.today().day - queryset.next_purchase_date.day >= 0:
+            diff += 1
+
+        diff = max(0, diff)
+
+        queryset.sum_price = (diff // queryset.purchase_month) * queryset.purchase_price
+
         serializer = SubscribeSerializer(queryset)
         return Response(serializer.data, status=200)
 
@@ -254,7 +266,7 @@ class SubscribeSidAPI(generics.GenericAPIView):
         update_object = {k: v and v or original_object.get(k, '') for k, v in request.data.items()}
 
         Subscribe.objects.filter(id=sid).update(**update_object)
-
+        
         return Response(status=200)
 
     def delete(self, request, username, sid):

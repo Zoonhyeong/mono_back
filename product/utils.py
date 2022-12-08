@@ -36,4 +36,7 @@ def process_sorted(request, queryset, target, offset, limit):
 
     return queryset[offset : offset+limit]
 
+# 날짜간의 개월 수 차이를 구하는 함수
+def diff_month(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
 
